@@ -1,0 +1,10 @@
+name = "AtomicSystems"
+uuid = "56d0e77e-dbc1-4298-ac1b-edea21caa27a"
+authors = ["Benoît Richard <kolaru@hotmail.com>"]
+version = "0.1.0"
+
+[deps]
+PeriodicTable = "7b2266bf-644c-5ea3-82d8-af4bbd25a884"
+
+[compat]
+PeriodicTable = "1.2.1"
