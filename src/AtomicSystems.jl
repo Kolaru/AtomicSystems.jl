@@ -39,7 +39,8 @@ end
 
 Atom(element::Union{AbstractString, Symbol, Integer}, index, name) = Atom(to_element(element), index, name)
 
-iselement(A::Atom, elem) = (A.element.number == to_element(elem).number)
+iselement(A::Atom, elem) = iselement(A.element, elem)
+iselement(E::Element, elem) = (E.number == to_element(elem).number)
 iselement(elem) = (A -> iselement(A, elem))
 
 function Base.show(io::IO, ::MIME"text/plain", atom::Atom)
