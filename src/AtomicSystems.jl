@@ -70,6 +70,7 @@ function Base.:(==)(A1::Atom, A2::Atom)
 end
 
 Base.hash(A::Atom, h::UInt) = hash([A.element, A.index, A.name], h)
+Base.broadcastable(A::Atom) = Ref(A)
 
 """
     AtomicSystem
@@ -148,6 +149,7 @@ end
 Base.getindex(system::AtomicSystem, inds...) = getindex(system.atoms, inds...)
 Base.lastindex(system::AtomicSystem) = length(system)
 Base.length(system::AtomicSystem) = length(system.atoms)
+Base.size(system::AtomicSystem) = length(system)
 Base.filter(f, system::AtomicSystem) = filter(f, system.atoms)
 
 # Retrieval by name
