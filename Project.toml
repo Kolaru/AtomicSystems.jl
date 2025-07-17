@@ -5,6 +5,10 @@ version = "0.1.0"
 
 [deps]
 PeriodicTable = "7b2266bf-644c-5ea3-82d8-af4bbd25a884"
+Unitful = "1986cc42-f94f-5a68-af5c-568840ba703d"
+UnitfulAtomic = "a7773ee8-282e-5fa2-be4e-bd808c38a91a"
 
 [compat]
 PeriodicTable = "1.2.1"
+Unitful = "1.23.1"
+UnitfulAtomic = "1.0.0"
