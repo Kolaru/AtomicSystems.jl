@@ -64,3 +64,11 @@ end
         @test hash(S1) == hash(S2)
     end
 end
+
+@testset "Loading" begin
+    system, geometry = read("../data/formic_acid.xyz", AtomicSystem)
+    @test length(system) == 5
+
+    system, geometry = read("../data/CPCA.dat", AtomicSystem)
+    @test length(system) == 11
+end

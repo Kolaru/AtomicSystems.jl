@@ -1,3 +1,12 @@
+const INTEGER = r"^\d+$"
+function parse_atom(atom::String)
+    haskey(elements, atom) && return elements[atom]
+    !isnothing(match(INTEGER, atom)) && return elements[parse(Int, atom)]
+    haskey(elements, Symbol(atom)) && return elements[Symbol(atom)]
+
+    throw(ArgumentError("could not parse  $atom  as an atom (supported are Z, atom name and atom symbol)"))
+end
+
 """
     read(filename::AbstractString, ::Type{AtomicSystem} ; units = u"Å", center = true)
 
@@ -17,7 +26,7 @@ function Base.read(filename::AbstractString, ::Type{AtomicSystem} ; units = u"Å
         data[:, k] = parse.(Float64, xyz)
     end
 
-    system = AtomicSystem(Symbol.(atoms))
+    system = AtomicSystem(parse_atom.(atoms))
     geometry = data*units
 
     if center
