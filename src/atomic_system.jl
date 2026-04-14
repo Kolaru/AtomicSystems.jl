@@ -98,11 +98,12 @@ function AtomicSystem(names::Vector{String}, elements::Vector)
     return AtomicSystem(atoms, Dict([name => i for (i, name) in enumerate(names)]))
 end
 
-function AtomicSystem(element_symbols::Vector ; name_prefix="")
+function AtomicSystem(elements::Vector{Element})
     counters = Dict()
     counts = []
 
-    for sym in element_symbols
+    for E in elements
+        sym = E.symbol
         if !haskey(counters, sym)
             counters[sym] = 1
         else
@@ -111,23 +112,20 @@ function AtomicSystem(element_symbols::Vector ; name_prefix="")
         push!(counts, counters[sym])
     end
 
-    names = map(zip(counts, element_symbols)) do (k, sym)
+    names = map(zip(counts, elements)) do (k, E)
+        sym = E.symbol
         if counters[sym] == 1
-            return "$name_prefix$sym"
+            return "$sym"
         else
-            return "$name_prefix$sym$k"
+            return "$sym$k"
         end
     end
 
-    return AtomicSystem(names, element_symbols)
+    return AtomicSystem(names, elements)
 end
 
-function AtomicSystem(element_numbers::Vector{<:Integer} ; name_prefix="")
-    element_symbols = map(element_numbers) do num
-        return Symbol(PeriodicTable.elements[num].symbol)
-    end
-    return AtomicSystem(element_symbols ; name_prefix=name_prefix)
-end
+AtomicSystem(element_symbols::Vector{Symbol}) = AtomicSystem([elements[sym] for sym in element_symbols])
+AtomicSystem(element_numbers::Vector{<:Integer}) = AtomicSystem([elements[Z] for Z in element_numbers])
 
 function Base.getproperty(system::AtomicSystem, sym::Symbol)
     sym === :elements && return getproperty.(system, :element)
