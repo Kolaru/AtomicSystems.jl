@@ -1,14 +1,16 @@
 name = "AtomicSystems"
 uuid = "56d0e77e-dbc1-4298-ac1b-edea21caa27a"
-authors = ["Benoît Richard <kolaru@hotmail.com>"]
 version = "0.1.0"
+authors = ["Benoît Richard <kolaru@hotmail.com>"]
 
 [deps]
+AtomicLevels = "10933b4c-d60f-11e8-1fc6-bd9035a249a1"
 PeriodicTable = "7b2266bf-644c-5ea3-82d8-af4bbd25a884"
 Unitful = "1986cc42-f94f-5a68-af5c-568840ba703d"
 UnitfulAtomic = "a7773ee8-282e-5fa2-be4e-bd808c38a91a"
 
 [compat]
+AtomicLevels = "0.1.11"
 PeriodicTable = "1.2.1"
 Unitful = "1.23.1"
 UnitfulAtomic = "1.0.0"
