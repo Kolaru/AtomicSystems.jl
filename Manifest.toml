@@ -2,7 +2,7 @@
 
 julia_version = "1.12.6"
 manifest_format = "2.0"
-project_hash = "cf5d557a64f90d894b38e2a3d65f86ed71b5387a"
+project_hash = "d098bd546af7cdd1b392c23b008969c18f73ccfa"
 
 [[deps.ArrayLayouts]]
 deps = ["FillArrays", "LinearAlgebra", "StaticArrays"]
@@ -27,7 +27,7 @@ uuid = "10933b4c-d60f-11e8-1fc6-bd9035a249a1"
 version = "0.1.11"
 
 [[deps.AtomicSystems]]
-deps = ["PeriodicTable", "Unitful", "UnitfulAtomic"]
+deps = ["AtomicLevels", "PeriodicTable", "Unitful", "UnitfulAtomic"]
 path = "."
 uuid = "56d0e77e-dbc1-4298-ac1b-edea21caa27a"
 version = "0.1.0"

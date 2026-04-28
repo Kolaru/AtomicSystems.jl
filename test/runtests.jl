@@ -66,9 +66,20 @@ end
 end
 
 @testset "Loading" begin
+    system, geometry = read("../data/CPCA.dat", AtomicSystem)
+    @test length(system) == 11
+
     system, geometry = read("../data/formic_acid.xyz", AtomicSystem)
     @test length(system) == 5
 
-    system, geometry = read("../data/CPCA.dat", AtomicSystem)
-    @test length(system) == 11
+    tmpfile = ".tmp.xyz"
+    try
+        write(tmpfile, system, geometry)
+        s2, g2 = read(tmpfile, AtomicSystem)
+
+        @test system == s2
+        @test geometry == g2
+    finally
+        rm(tmpfile ; force = true)
+    end
 end

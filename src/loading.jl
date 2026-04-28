@@ -37,3 +37,19 @@ function Base.read(filename::AbstractString, ::Type{AtomicSystem} ; units = u"Å
 
     return system, geometry
 end
+
+function Base.write(io::IO, system::AtomicSystem, geometry::AbstractMatrix)
+    geometry = ustrip.(u"Å", geometry)
+    println(io, length(system))
+    println(io, "File generated using Kolaru/AtomicSystem.jl")
+    for A in system
+        x, y, z = geometry[:, A]
+        println(io, @sprintf("  %3s %20.10f %20.10f %20.10f", A.element.symbol, x, y, z))
+    end
+end
+
+function Base.write(filename::AbstractString, system::AtomicSystem, geometry::AbstractMatrix, mode = "w")
+    open(filename, mode) do file
+        write(file, system, geometry)
+    end
+end
