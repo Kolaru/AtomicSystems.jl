@@ -1,6 +1,7 @@
 using AtomicSystems
 using PeriodicTable
 using Test
+using Unitful
 
 function test_show(object)
     io = IOBuffer()
@@ -65,6 +66,16 @@ end
     end
 end
 
+@testset "Geometry" begin
+    system = AtomicSystem([:C, :C])
+    positions = [
+        1.0 10.0
+        -5.0 5.0
+        1.2 1.2
+    ]
+    @test center_of_mass(system, positions) == [5.5, 0.0, 1.2]
+end
+
 @testset "Loading" begin
     system, geometry = read("../data/CPCA.dat", AtomicSystem)
     @test length(system) == 11
@@ -78,7 +89,7 @@ end
         s2, g2 = read(tmpfile, AtomicSystem)
 
         @test system == s2
-        @test geometry == g2
+        @test geometry ≈ g2
     finally
         rm(tmpfile ; force = true)
     end
