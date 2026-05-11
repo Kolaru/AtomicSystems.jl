@@ -39,6 +39,9 @@ iselement(A::Atom, elem) = iselement(A.element, elem)
 iselement(E::Element, elem) = (E.number == to_element(elem).number)
 iselement(elem) = (A -> iselement(A, elem))
 
+atom_mass(A::Atom) = A.element.atomic_mass
+atom_color(A::Atom) = A.element.cpk_hex
+
 function Base.show(io::IO, ::MIME"text/plain", atom::Atom)
     if get(io, :compact, false)
         show(io, atom)
@@ -189,9 +192,6 @@ function Base.hash(system::AtomicSystem, h::UInt)
 end
 
 Base.eltype(::AtomicSystem) = Atom
-
-atom_masses(system::AtomicSystem) = [A.element.atomic_mass for A in system]
-atom_colors(system::AtomicSystem) = [A.element.cpk_hex for A in system]
 
 """
     equivalent_system(system::AtomicSystem)

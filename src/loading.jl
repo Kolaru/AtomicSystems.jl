@@ -30,7 +30,7 @@ function Base.read(filename::AbstractString, ::Type{AtomicSystem} ; units = u"Å
     geometry = data*units
 
     if center
-        masses = austrip.(atom_masses(system))
+        masses = austrip.(atom_mass.(system))
         cm = 1/sum(masses) .* sum(geometry .* reshape(masses, 1, :) ; dims = 2)
         geometry .-= cm
     end
