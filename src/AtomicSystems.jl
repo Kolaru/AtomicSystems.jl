@@ -17,10 +17,11 @@ export center_of_mass
 include("loading.jl")
 export read, write
 
-include("interface.jl")
+include("electronic_structure.jl")
 export ElectronicTransition, Photoionization, AugerDecay, FluorescenceDecay
 export ElectronicStructureBackend
-export cross_section, rate, isa_photoionization, isa_auger_decay, isa_fluoresence
+export cross_section, rate, isa_photoionization, isa_auger_decay, isa_fluoresence, ejected_orbital
 export calculate_photoionizations, calculate_decays, calculate_orbital_energies
+export highest_occupied_orbital, total_orbital_energy, binding_energy, closest_orbital_in_energy
 
 end # module AtomicSystem

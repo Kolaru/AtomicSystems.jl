@@ -1,3 +1,4 @@
+using AtomicLevels
 using AtomicSystems
 using PeriodicTable
 using Test
@@ -94,3 +95,5 @@ end
         rm(tmpfile ; force = true)
     end
 end
+
+include("electronic_structure.jl")
