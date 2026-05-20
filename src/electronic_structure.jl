@@ -61,8 +61,8 @@ isa_photoionization(event::Photoionization) = true
 isa_auger_decay(event::ElectronicTransition) = false
 isa_auger_decay(event::AugerDecay) = true
 
-isa_fluoresence(event::ElectronicTransition) = false
-isa_fluoresence(event::FluorescenceDecay) = true
+isa_fluorescence(event::ElectronicTransition) = false
+isa_fluorescence(event::FluorescenceDecay) = true
 
 """
     ejected_orbital(transition::Photoionization)
@@ -144,7 +144,7 @@ Use the given backend to calculate the the orbital energies of an atom in a give
 
 Return a dictionnary `Orbital => energy`, with the energy of each orbital in atomic units.
 
-TODO Relax the unit requirement, and allow unitful quantitiesjj
+TODO Relax the unit requirement, and allow unitful quantities
 """
 function calculate_orbital_energies end
 
