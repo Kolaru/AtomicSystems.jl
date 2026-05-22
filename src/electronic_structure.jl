@@ -93,6 +93,13 @@ function ejected_orbital(transition::AugerDecay)
     for (orb, n_initial, _) in transition.initial_configuration
         n_final, _ = transition.final_configuration[orb]
         if n_final < n_initial
+"""
+    calculate_decays(backend::ElectronicStructureBackend, atom, [configuration::Configuration])
+
+Use the given backend to calculate the possible electronic transition for an atom in a given configuration.
+
+Return a list of `ElectronicTransition`.
+"""
             orbital = orb
         end
     end
@@ -124,17 +131,31 @@ function calculate_photoionizations(backend, photon_energy, atom::Atom, configur
     return calculate_photoionizations(backend, photon_energy, atom.element, configuration)
 end
 
+
 """
-    calculate_decays(backend::ElectronicStructureBackend, atom::Element [, configuration::Configuration])
+    calculate_auger_decays(backend::ElectronicStructureBackend, atom, [configuration::Configuration])
 
-Use the given backend to calculate the possible electronic transition for an atom in a given configuration.
+Use the given backend to calculate the possible Auger decays for an atom in a given configuration.
 
-Return a list of `ElectronicTransition`.
+Return a list of `AugerDecay`.
 """
-function calculate_decays end
+function calculate_auger_decays end
 
-function calculate_decays(backend, atom::Atom, configuration::Configuration)
-    return calculate_decays(backend, atom.element, configuration)
+function calculate_auger_decays(backend, atom::Atom, configuration::Configuration)
+    return calculate_auger_decays(backend, atom.element, configuration)
+end
+
+"""
+    calculate_fluorescence_decays(backend::ElectronicStructureBackend, atom, [configuration::Configuration])
+
+Use the given backend to calculate the possible fluorescence decays for an atom in a given configuration.
+
+Return a list of `FluorescenceDecay`.
+"""
+function calculate_fluorescence_decays end
+
+function calculate_fluorescence_decays(backend, atom::Atom, configuration::Configuration)
+    return calculate_fluorescence_decays(backend, atom.element, configuration)
 end
 
 """
@@ -150,6 +171,20 @@ function calculate_orbital_energies end
 
 function calculate_orbital_energies(backend, atom::Atom, configuration::Configuration)
     return calculate_orbital_energies(backend, atom.element, configuration)
+end
+
+"""
+    calculate_decays(backend::ElectronicStructureBackend, atom, [configuration::Configuration])
+
+Use the given backend to calculate the possible electronic transition for an atom in a given configuration.
+
+Return a list of `ElectronicTransition`.
+"""
+function calculate_decays(backend, atom, configuration::Configuration)
+    return vcat(
+        calculate_auger_decays(backend, atom, configuration),
+        calculate_fluorescence_decays(backend, atom, configuration)
+    )
 end
 
 """
