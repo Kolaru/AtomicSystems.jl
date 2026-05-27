@@ -195,6 +195,9 @@ Return the occupied orbital with the highest energy.
 function highest_occupied_orbital(backend, atom, configuration)
     isempty(configuration) && return nothing
     energies = calculate_orbital_energies(backend, atom, configuration)
+    filter!(energies) do (orb, energy)
+        configuration[orb][1] > 0
+    end
     return argmax(energies)  # Return the key, which is an orbital
 end
 
