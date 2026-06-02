@@ -15,6 +15,10 @@ function Base.:(+)(configuration::Configuration, orbital::Orbital)
     return configuration + Configuration(orbital, 1)
 end
 
+function Base.isfull(configuration::Configuration, orbital::Orbital)
+    return num_electrons(configuration, orbital) == degeneracy(orbital)
+end
+
 abstract type ElectronicTransition end
 
 struct Photoionization <: ElectronicTransition
@@ -219,10 +223,9 @@ function binding_energy(backend, atom, configuration, orbital)
     return energy_before - energy_after
 end
 
-function closest_orbital_in_energy(backend, atom, configuration, target_energy)
+function closest_orbitals(backend, atom, configuration, target_energy)
     energies = calculate_orbital_energies(backend, atom, configuration)
+    orbitals = collect(keys(energies))
 
-    return argmin(keys(energies)) do orbital
-        return abs(energies[orbital] - target_energy)
-    end
+    return sort(orbitals, by = (orbital -> abs(energies[orbital] - target_energy)))
 end

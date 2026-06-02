@@ -79,5 +79,5 @@ end
     @test total_orbital_energy(backend, elem, config) == -230
     @test binding_energy(backend, elem, config, Orbital(1, 0)) == -100
     @test highest_occupied_orbital(backend, elem, config) == o"3s"
-    @test closest_orbital_in_energy(backend, elem, config, -51.0) == o"2p"
+    @test first(closest_orbitals(backend, elem, config, -51.0)) == o"2p"
 end
