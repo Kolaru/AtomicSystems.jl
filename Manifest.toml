@@ -2,7 +2,7 @@
 
 julia_version = "1.12.6"
 manifest_format = "2.0"
-project_hash = "5f5e7f0d3efa94c76b6cb5621523caad86b5ce8a"
+project_hash = "fa16e8e9f221502bb0452e738f39d87710ba12d7"
 
 [[deps.ArrayLayouts]]
 deps = ["FillArrays", "LinearAlgebra", "StaticArrays"]
@@ -154,6 +154,11 @@ deps = ["Libdl", "OpenBLAS_jll", "libblastrampoline_jll"]
 uuid = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 version = "1.12.0"
 
+[[deps.MacroTools]]
+git-tree-sha1 = "1e0228a030642014fe5cfe68c2c0a818f9e3f522"
+uuid = "1914dd2f-81c6-5fcd-8719-6d5c9610ff09"
+version = "0.5.16"
+
 [[deps.Markdown]]
 deps = ["Base64", "JuliaSyntaxHighlighting", "StyledStrings"]
 uuid = "d6f4376e-aef5-505a-96c1-9c027394607a"
@@ -168,6 +173,12 @@ weakdeps = ["BandedMatrices"]
 
     [deps.MatrixFactorizations.extensions]
     MatrixFactorizationsBandedMatricesExt = "BandedMatrices"
+
+[[deps.Memoization]]
+deps = ["MacroTools"]
+git-tree-sha1 = "7dbf904fa6c4447bd1f1d316886bfbe29feacf45"
+uuid = "6fafb56a-5788-4b4e-91ca-c0cea6611c73"
+version = "0.2.2"
 
 [[deps.OpenBLAS_jll]]
 deps = ["Artifacts", "CompilerSupportLibraries_jll", "Libdl"]

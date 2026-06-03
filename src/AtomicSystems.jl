@@ -1,6 +1,7 @@
 module AtomicSystems
 
 using AtomicLevels
+using Memoization
 using PeriodicTable
 using Printf
 using Statistics

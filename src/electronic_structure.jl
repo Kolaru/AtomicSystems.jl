@@ -196,7 +196,7 @@ end
 
 Return the occupied orbital with the highest energy.
 """
-function highest_occupied_orbital(backend, atom, configuration)
+@memoize function highest_occupied_orbital(backend, atom, configuration)
     isempty(configuration) && return nothing
     energies = calculate_orbital_energies(backend, atom, configuration)
     filter!(energies) do (orb, energy)
@@ -213,7 +213,7 @@ function total_orbital_energy(backend, atom, configuration)
     end
 end
 
-function binding_energy(backend, atom, configuration, orbital)
+@memoize function binding_energy(backend, atom, configuration, orbital)
     !(orbital in configuration) && throw(ArgumentError(
         "trying to compute the binding energy of orbital $orbital " *
         "not present in configuration $configuration"))
