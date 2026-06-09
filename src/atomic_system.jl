@@ -132,6 +132,7 @@ end
 
 AtomicSystem(element_symbols::Vector{Symbol}) = AtomicSystem([elements[sym] for sym in element_symbols])
 AtomicSystem(element_numbers::Vector{<:Integer}) = AtomicSystem([elements[Z] for Z in element_numbers])
+AtomicSystem(system::AtomicSystem) = system
 
 function Base.getproperty(system::AtomicSystem, sym::Symbol)
     sym === :elements && return getproperty.(system, :element)
