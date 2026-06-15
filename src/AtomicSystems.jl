@@ -5,6 +5,7 @@ using Memoization
 using PeriodicTable
 using Printf
 using Statistics
+using ThreadSafeDicts
 using Unitful, UnitfulAtomic
 
 include("atomic_system.jl")

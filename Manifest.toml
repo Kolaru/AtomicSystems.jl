@@ -2,7 +2,7 @@
 
 julia_version = "1.12.6"
 manifest_format = "2.0"
-project_hash = "fa16e8e9f221502bb0452e738f39d87710ba12d7"
+project_hash = "0a94b18e59bbe9105d73802689b066026e0d4109"
 
 [[deps.ArrayLayouts]]
 deps = ["FillArrays", "LinearAlgebra", "StaticArrays"]
@@ -27,7 +27,7 @@ uuid = "10933b4c-d60f-11e8-1fc6-bd9035a249a1"
 version = "0.1.11"
 
 [[deps.AtomicSystems]]
-deps = ["AtomicLevels", "PeriodicTable", "Printf", "Statistics", "Unitful", "UnitfulAtomic"]
+deps = ["AtomicLevels", "Memoization", "PeriodicTable", "Printf", "Statistics", "Unitful", "UnitfulAtomic"]
 path = "."
 uuid = "56d0e77e-dbc1-4298-ac1b-edea21caa27a"
 version = "0.1.0"
@@ -287,6 +287,11 @@ version = "1.11.0"
 deps = ["Dates"]
 uuid = "fa267f1f-6049-4f14-aa54-33bafae1ed76"
 version = "1.0.3"
+
+[[deps.ThreadSafeDicts]]
+git-tree-sha1 = "300b753c0a786ea43fdafc26a4e50b87fb58cd50"
+uuid = "4239201d-c60e-5e0a-9702-85d713665ba7"
+version = "0.1.6"
 
 [[deps.UnPack]]
 git-tree-sha1 = "387c1f73762231e86e0c9c5443ce3b4a0a9a0c2b"
