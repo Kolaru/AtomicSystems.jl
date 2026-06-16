@@ -3,6 +3,8 @@ function AtomicLevels.Configuration(element::Element)
     return parse(Configuration{Orbital}, element.el_config)
 end
 
+AtomicLevels.Configuration(atom::Atom) = Configuration(atom.element)
+
 # TODO PR This type pirated greatness to AtomicLevels.jl
 function Base.getindex(configuration::Configuration, orbital::Orbital)
     i = findfirst(==(orbital), orbitals(configuration))
@@ -163,7 +165,7 @@ function calculate_fluorescence_decays(backend, atom::Atom, configuration::Confi
 end
 
 """
-    calculate_orbital_energies(backend::ElectronicStructureBackend, atom::Element [, configuration::Configuration])
+    calculate_orbital_energies(backend::ElectronicStructureBackend, atom::Element [, configuration::Configuration, active_space])
 
 Use the given backend to calculate the the orbital energies of an atom in a given configuration.
 
@@ -173,8 +175,8 @@ TODO Relax the unit requirement, and allow unitful quantities
 """
 function calculate_orbital_energies end
 
-function calculate_orbital_energies(backend, atom::Atom, configuration::Configuration)
-    return calculate_orbital_energies(backend, atom.element, configuration)
+function calculate_orbital_energies(backend, atom::Atom, configuration::Configuration, active_space = orbitals(configuration))
+    return calculate_orbital_energies(backend, atom.element, configuration, active_space)
 end
 
 """
@@ -223,8 +225,8 @@ end
     return energy_before - energy_after
 end
 
-function closest_orbitals(backend, atom, configuration, target_energy)
-    energies = calculate_orbital_energies(backend, atom, configuration)
+function closest_orbitals(backend, atom, configuration, target_energy, active_space = orbitals(Configuration(atom)))
+    energies = calculate_orbital_energies(backend, atom, configuration, active_space)
     orbitals = collect(keys(energies))
 
     return sort(orbitals, by = (orbital -> abs(energies[orbital] - target_energy)))
