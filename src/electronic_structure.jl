@@ -215,14 +215,19 @@ function total_orbital_energy(backend, atom, configuration)
     end
 end
 
+# TODO Parse the total energy from XATOM and actually use it
+# Currently uses the orbital energy as a proxy for the binding energy
 @memoize ThreadSafeDict function binding_energy(backend, atom, configuration, orbital)
     !(orbital in configuration) && throw(ArgumentError(
         "trying to compute the binding energy of orbital $orbital " *
         "not present in configuration $configuration"))
 
-    energy_before = total_orbital_energy(backend, atom, configuration)
-    energy_after = total_orbital_energy(backend, atom, configuration - orbital) 
-    return energy_before - energy_after
+    energies = calculate_orbital_energies(backend, atom, configuration)
+    return energies[orbital]
+
+    # energy_before = total_energy(backend, atom, configuration)
+    # energy_after = total_energy(backend, atom, configuration - orbital) 
+    # return energy_after - energy_before
 end
 
 function closest_orbitals(backend, atom, configuration, target_energy, active_space = orbitals(Configuration(atom)))
