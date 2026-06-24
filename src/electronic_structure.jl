@@ -198,7 +198,7 @@ end
 
 Return the occupied orbital with the highest energy.
 """
-@memoize ThreadSafeDict function highest_occupied_orbital(backend, atom, configuration)
+@memoize ThreadSafeDict{Any, Union{Orbital{Int}, Nothing}} function highest_occupied_orbital(backend, atom, configuration)
     isempty(configuration) && return nothing
     energies = calculate_orbital_energies(backend, atom, configuration)
     filter!(energies) do (orb, energy)
@@ -217,7 +217,7 @@ end
 
 # TODO Parse the total energy from XATOM and actually use it
 # Currently uses the orbital energy as a proxy for the binding energy
-@memoize ThreadSafeDict function binding_energy(backend, atom, configuration, orbital)
+function binding_energy(backend, atom, configuration, orbital)
     !(orbital in configuration) && throw(ArgumentError(
         "trying to compute the binding energy of orbital $orbital " *
         "not present in configuration $configuration"))

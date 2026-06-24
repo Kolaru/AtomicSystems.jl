@@ -9,7 +9,7 @@
 
     @test isa_photoionization(ph)
     @test !isa_auger_decay(ph)
-    @test !isa_fluoresence(ph)
+    @test !isa_fluorescence(ph)
 
     @test ejected_orbital(ph) == o"1s"
 end
@@ -25,7 +25,7 @@ end
 
     @test !isa_photoionization(au)
     @test isa_auger_decay(au)
-    @test !isa_fluoresence(au)
+    @test !isa_fluorescence(au)
 
     @test ejected_orbital(au) == o"2p"
 
@@ -54,7 +54,7 @@ function AtomicSystems.calculate_decays(backend::DummyBackend, ::Element, ::Conf
     return backend.decays
 end
 
-function AtomicSystems.calculate_orbital_energies(backend::DummyBackend, ::Element, ::Configuration)
+function AtomicSystems.calculate_orbital_energies(backend::DummyBackend, ::Element, ::Configuration, active_space = nothing)
     return backend.energies
 end
 

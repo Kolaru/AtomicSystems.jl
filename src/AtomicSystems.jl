@@ -8,6 +8,9 @@ using Statistics
 using ThreadSafeDicts
 using Unitful, UnitfulAtomic
 
+include("per_thread_cache.jl")
+export PerThreadCache
+
 include("atomic_system.jl")
 export Atom, AtomicSystem
 export iselement, to_element, to_element_symbol

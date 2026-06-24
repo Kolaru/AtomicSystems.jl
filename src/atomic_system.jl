@@ -68,7 +68,7 @@ function Base.:(==)(A1::Atom, A2::Atom)
     A1.element == A2.element && A1.index == A2.index && A1.name == A2.name
 end
 
-Base.hash(A::Atom, h::UInt) = hash([A.element, A.index, A.name], h)
+Base.hash(A::Atom, h::UInt) = hash(A.element, hash(A.index, hash(A.name, h)))
 Base.broadcastable(A::Atom) = Ref(A)
 
 """
