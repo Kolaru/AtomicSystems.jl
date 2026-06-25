@@ -5,11 +5,12 @@ using Memoization
 using PeriodicTable
 using Printf
 using Statistics
+using TaskLocalValues
 using ThreadSafeDicts
 using Unitful, UnitfulAtomic
 
 include("per_thread_cache.jl")
-export PerThreadCache
+export TaskLocalDict
 
 include("atomic_system.jl")
 export Atom, AtomicSystem

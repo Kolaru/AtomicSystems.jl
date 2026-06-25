@@ -1,16 +1,19 @@
-struct PerThreadCache{K, V}
-    dicts::Dict{Int, Dict{K, V}}
+struct TaskLocalDict{K, V, F}
+    local_value::TaskLocalValue{Dict{K, V}, F}
 end
 
-PerThreadCache{K, V}() where {K, V} = PerThreadCache{K, V}(Dict{Int, Dict{K, V}}())
-PerThreadCache() = PerThreadCache{Any, Any}()
-
-get_dict(pt::PerThreadCache{K, V}) where {K, V} = get!(pt.dicts, Threads.threadid()) do
-    return Dict{K, V}()
+function TaskLocalDict{K, V}() where {K, V}
+    new_dict() = Dict{K, V}()
+    local_value = TaskLocalValue(new_dict)
+    return TaskLocalDict{K, V, typeof(new_dict)}(local_value)
 end
 
-Base.getindex(pt::PerThreadCache{K, V}, key::K) where {K, V} = get_dict(pt)[key]
-Base.setindex(pt::PerThreadCache{K, V}, key::K, val::V) where {K, V} = (get_dict(pt)[key] = val)
-Base.haskey(pt::PerThreadCache{K, V}, key) where {K, V} = haskey(get_dict(pt), key)
-Base.get!(f, pt::PerThreadCache, key) = get!(f, get_dict(pt), key)
-Base.empty!(pt::PerThreadCache) = empty!(pt.dicts)
+TaskLocalDict() = TaskLocalDict{Any, Any}()
+
+get_dict(tld::TaskLocalDict{K, V}) where {K, V} = tld.local_value[]
+
+Base.getindex(tld::TaskLocalDict{K, V}, key::K) where {K, V} = get_dict(tld)[key]
+Base.setindex(tld::TaskLocalDict{K, V}, key::K, val::V) where {K, V} = (get_dict(tld)[key] = val)
+Base.haskey(tld::TaskLocalDict{K, V}, key) where {K, V} = haskey(get_dict(tld), key)
+Base.get!(f, tld::TaskLocalDict, key) = get!(f, get_dict(tld), key)
+Base.empty!(tld::TaskLocalDict) = empty!(get_dict(tld))
