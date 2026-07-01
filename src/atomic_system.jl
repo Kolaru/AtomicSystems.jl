@@ -70,6 +70,7 @@ end
 
 Base.hash(A::Atom, h::UInt) = hash(A.element, hash(A.index, hash(A.name, h)))
 Base.broadcastable(A::Atom) = Ref(A)
+Base.isassigned(v::Vector, A::Atom) = isassigned(v, A.index)
 
 """
     AtomicSystem
