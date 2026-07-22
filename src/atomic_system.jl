@@ -20,6 +20,9 @@ end
 to_element_symbol(identifier) = Symbol(to_element(identifier).symbol)
 to_element_symbol(sym::Symbol) = sym
 
+atom_mass(A) = to_element(A).atomic_mass
+atom_color(A) = to_element(A).cpk_hex
+
 """
     Atom
 
@@ -35,12 +38,12 @@ end
 
 Atom(element::Union{AbstractString, Symbol, Integer}, index, name) = Atom(to_element(element), index, name)
 
+to_element(atom::Atom) = atom.element
+
 iselement(A::Atom, elem) = iselement(A.element, elem)
 iselement(E::Element, elem) = (E.number == to_element(elem).number)
+iselement(sym::Symbol, elem) = (sym == Symbol(to_element(elem).symbol))
 iselement(elem) = (A -> iselement(A, elem))
-
-atom_mass(A::Atom) = A.element.atomic_mass
-atom_color(A::Atom) = A.element.cpk_hex
 
 function Base.show(io::IO, ::MIME"text/plain", atom::Atom)
     if get(io, :compact, false)
