@@ -15,7 +15,7 @@ export TaskLocalDict
 include("atomic_system.jl")
 export Atom, AtomicSystem
 export iselement, to_element, to_element_symbol
-export atom_color, atom_mass, equivalent_systems
+export atom_color, atom_mass, atom_symbol, equivalent_systems
 
 include("geometry.jl")
 export center_of_mass

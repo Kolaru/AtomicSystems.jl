@@ -22,6 +22,7 @@ to_element_symbol(sym::Symbol) = sym
 
 atom_mass(A) = to_element(A).atomic_mass
 atom_color(A) = to_element(A).cpk_hex
+atom_symbol(A) = Symbol(to_element(A).symbol)
 
 """
     Atom
