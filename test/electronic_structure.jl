@@ -46,16 +46,14 @@ struct DummyBackend <: ElectronicStructureBackend
     energies::Dict
 end
 
-function AtomicSystems.calculate_photoionizations(backend::DummyBackend, ::Element, ::Configuration)
-    return backend.photoionzations
-end
-
-function AtomicSystems.calculate_decays(backend::DummyBackend, ::Element, ::Configuration)
-    return backend.decays
-end
-
 function AtomicSystems.calculate_orbital_energies(backend::DummyBackend, ::Element, ::Configuration, active_space = nothing)
     return backend.energies
+end
+
+function AtomicSystems.calculate_total_energy(backend::DummyBackend, ::Element, config::Configuration)
+    return sum(config) do (orbital, n, state)
+        return n * backend.energies[orbital]
+    end
 end
 
 @testset "Interface" begin
@@ -77,7 +75,7 @@ end
     elem = elements[:Na]
 
     @test total_orbital_energy(backend, elem, config) == -230
-    @test binding_energy(backend, elem, config, Orbital(1, 0)) == -100
+    @test binding_energy(backend, elem, config, o"1s") == -100
     @test highest_occupied_orbital(backend, elem, config) == o"3s"
     @test first(closest_orbitals(backend, elem, config, -51.0)) == o"2p"
 end

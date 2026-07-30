@@ -28,7 +28,7 @@ export ElectronicTransition, Photoionization, AugerDecay, FluorescenceDecay
 export ElectronicStructureBackend
 export cross_section, rate, isa_photoionization, isa_auger_decay, isa_fluorescence, ejected_orbital
 export calculate_photoionizations, calculate_auger_decays, calculate_fluorescence_decays,
-    calculate_orbital_energies, calculate_decays
-export highest_occupied_orbital, total_orbital_energy, binding_energy, closest_orbitals
+    calculate_orbital_energies, calculate_total_energy
+export calculate_decays, highest_occupied_orbital, total_orbital_energy, binding_energy, closest_orbitals
 
 end # module AtomicSystem

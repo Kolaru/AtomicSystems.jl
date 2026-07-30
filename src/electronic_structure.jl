@@ -1,3 +1,7 @@
+# TODO Design-wise, it is probably reasonnable to eventually split this file as a separate
+# ElectronicTransitions.jl (or AtomicTransitions.jl) package, and have the definition for ::Atom be a package extension
+# in AtomicSystems.jl
+
 # TODO Remove once PR is merged: https://github.com/JuliaAtoms/AtomicLevels.jl/pull/128
 function AtomicLevels.Configuration(element::Element)
     return parse(Configuration{Orbital}, element.el_config)
@@ -5,14 +9,14 @@ end
 
 AtomicLevels.Configuration(atom::Atom) = Configuration(atom.element)
 
-# TODO PR This type pirated greatness to AtomicLevels.jl
+# TODO PR This to AtomicLevels.jl
 function Base.getindex(configuration::Configuration, orbital::Orbital)
     i = findfirst(==(orbital), orbitals(configuration))
     isnothing(i) && return (0, :open)
     return (configuration.occupancy[i], configuration.states[i])
 end
 
-# TODO PR This ?
+# TODO PR This to AtomicLevels.jl
 function Base.:(+)(configuration::Configuration, orbital::Orbital)
     return configuration + Configuration(orbital, 1)
 end
@@ -120,7 +124,12 @@ end
 
 Supertype for the backend computing the electronic structures required by the problem.
 
-Must implement `calculate_photoionization`, `calculate_decays` and `calculate_orbital_energies`.
+A backend must implement
+    - `calculate_photoionizations`
+    - `calculate_auger_decays`
+    - `calculate_fluorescence_decays`
+    - `calculate_orbital_energies`
+    - `calculate_total_energy`
 """
 abstract type ElectronicStructureBackend end
 
@@ -167,11 +176,9 @@ end
 """
     calculate_orbital_energies(backend::ElectronicStructureBackend, atom::Element [, configuration::Configuration, active_space])
 
-Use the given backend to calculate the the orbital energies of an atom in a given configuration.
+Use the given backend to calculate the orbital energies of an atom in a given configuration.
 
 Return a dictionnary `Orbital => energy`, with the energy of each orbital in atomic units.
-
-TODO Relax the unit requirement, and allow unitful quantities
 """
 function calculate_orbital_energies end
 
@@ -180,9 +187,20 @@ function calculate_orbital_energies(backend, atom::Atom, configuration::Configur
 end
 
 """
+    calculate_total_energy(backend::ElectronicStructureBackend, atom::Element [, configuration::Configuration, active_space])
+
+Use the given backend to calculate the total electronic energy of the atom, returning it as a float in atomic units.
+"""
+function calculate_total_energy end
+
+function calculate_total_energy(backend, atom::Atom, configuration::Configuration, active_space = orbitals(configuration))
+    return calculate_total_energy(backend, atom.element, configuration, active_space)
+end
+
+"""
     calculate_decays(backend::ElectronicStructureBackend, atom, [configuration::Configuration])
 
-Use the given backend to calculate the possible electronic transition for an atom in a given configuration.
+Use the given backend to calculate the possible electronic transitions for an atom in a given configuration.
 
 Return a list of `ElectronicTransition`.
 """
@@ -207,29 +225,44 @@ Return the occupied orbital with the highest energy.
     return argmax(energies)  # Return the key, which is an orbital
 end
 
-# TODO Doc the following
-function total_orbital_energy(backend, atom, configuration)
+"""
+    total_orbital_energy(backend, atom, configuration::Configuration = Configuration(atom))
+
+Return the total orbital energy for the atom in the given configuration,
+in atomic units.
+
+This is equivalent to summing the orbital energy of each electron.
+"""
+function total_orbital_energy(backend, atom, configuration::Configuration = Configuration(atom))
     energies = calculate_orbital_energies(backend, atom, configuration)
     return sum(configuration ; init = 0.0) do (orb, n, state)
         return n * energies[orb]
     end
 end
 
-# TODO Parse the total energy from XATOM and actually use it
-# Currently uses the orbital energy as a proxy for the binding energy
+"""
+    binding_energy(backend, atom, configuration::Configuration, orbital::Orbital)
+
+Return the binding energy of an electron in the given orbital in atomic units.
+
+The binding energy is computed as the difference of total energy with and
+without the given electron.
+"""
 function binding_energy(backend, atom, configuration, orbital)
     !(orbital in configuration) && throw(ArgumentError(
         "trying to compute the binding energy of orbital $orbital " *
         "not present in configuration $configuration"))
 
-    energies = calculate_orbital_energies(backend, atom, configuration)
-    return energies[orbital]
-
-    # energy_before = total_energy(backend, atom, configuration)
-    # energy_after = total_energy(backend, atom, configuration - orbital) 
-    # return energy_after - energy_before
+    energy_before = calculate_total_energy(backend, atom, configuration)
+    energy_after = calculate_total_energy(backend, atom, configuration - orbital) 
+    return energy_before - energy_after
 end
 
+"""
+    closest_orbitals(backend, atom, configuration::Configuration, target_energy::Real, active_space = orbitals(Configuration(atom)))
+
+Return the orbital of the configuration sorted such as the orbital closest in energy to the target energy are first.
+"""
 function closest_orbitals(backend, atom, configuration, target_energy, active_space = orbitals(Configuration(atom)))
     energies = calculate_orbital_energies(backend, atom, configuration, active_space)
     orbitals = collect(keys(energies))
