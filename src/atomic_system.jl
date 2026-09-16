@@ -44,7 +44,7 @@ to_element(atom::Atom) = atom.element
 iselement(A::Atom, elem) = iselement(A.element, elem)
 iselement(E::Element, elem) = (E.number == to_element(elem).number)
 iselement(sym::Symbol, elem) = (sym == Symbol(to_element(elem).symbol))
-iselement(elem) = (A -> iselement(A, elem))
+iselement(elem) = Base.Fix2(iselement, elem)
 
 function Base.show(io::IO, ::MIME"text/plain", atom::Atom)
     if get(io, :compact, false)
