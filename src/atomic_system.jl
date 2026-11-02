@@ -17,6 +17,8 @@ function to_element(str::AbstractString)
         "string $(str) unknown as either an atom name or an atom symbol."))
 end
 
+to_element_symbol(identifier) = Symbol(to_element(identifier).symbol)
+
 """
     Atom
 
