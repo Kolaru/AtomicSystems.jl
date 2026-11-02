@@ -17,8 +17,6 @@ function to_element(str::AbstractString)
         "string $(str) unknown as either an atom name or an atom symbol."))
 end
 
-to_element_symbol(identifier) = Symbol(to_element(identifier).symbol)
-
 """
     Atom
 
@@ -37,6 +35,8 @@ Atom(element::Union{AbstractString, Symbol, Integer}, index, name) = Atom(to_ele
 iselement(A::Atom, elem) = iselement(A.element, elem)
 iselement(E::Element, elem) = (E.number == to_element(elem).number)
 iselement(elem) = (A -> iselement(A, elem))
+
+to_element(A::Atom) = A.element
 
 function Base.show(io::IO, ::MIME"text/plain", atom::Atom)
     if get(io, :compact, false)
