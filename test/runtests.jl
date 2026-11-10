@@ -56,7 +56,7 @@ end
             @test list[1] === atoms[1]
         end
 
-        masses = atom_mass.(AtomicSystem([:H, :C, :Pb]))
+        masses = atomic_mass.(AtomicSystem([:H, :C, :Pb]))
         @test masses[1] < masses[2] < masses[3]
 
         # Test hash and comparison

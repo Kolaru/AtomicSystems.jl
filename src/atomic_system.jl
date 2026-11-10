@@ -17,18 +17,6 @@ function to_element(str::AbstractString)
         "string $(str) unknown as either an atom name or an atom symbol."))
 end
 
-to_element_symbol(identifier) = Symbol(to_element(identifier).symbol)
-to_element_symbol(sym::Symbol) = sym
-
-function atomic_mass(A)
-    (A == "e" || A == :e) && return 1u"me_au"
-    return to_element(A).atomic_mass
-end
-
-atom_mass(A) = atomic_mass(A)
-atom_color(A) = to_element(A).cpk_hex
-atom_symbol(A) = Symbol(to_element(A).symbol)
-
 """
     Atom
 
@@ -43,15 +31,12 @@ struct Atom
 end
 
 Atom(element::Union{AbstractString, Symbol, Integer}, index, name) = Atom(to_element(element), index, name)
-
 to_element(atom::Atom) = atom.element
 
 iselement(A::Atom, elem) = iselement(A.element, elem)
 iselement(E::Element, elem) = (E.number == to_element(elem).number)
 iselement(sym::Symbol, elem) = (sym == Symbol(to_element(elem).symbol))
 iselement(elem) = Base.Fix2(iselement, elem)
-
-to_element(A::Atom) = A.element
 
 function Base.show(io::IO, ::MIME"text/plain", atom::Atom)
     if get(io, :compact, false)
