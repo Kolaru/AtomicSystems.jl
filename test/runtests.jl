@@ -1,6 +1,8 @@
+using AtomicLevels
 using AtomicSystems
 using PeriodicTable
 using Test
+using Unitful
 
 function test_show(object)
     io = IOBuffer()
@@ -54,7 +56,7 @@ end
             @test list[1] === atoms[1]
         end
 
-        masses = atom_masses(AtomicSystem([:H, :C, :Pb]))
+        masses = atom_mass.(AtomicSystem([:H, :C, :Pb]))
         @test masses[1] < masses[2] < masses[3]
 
         # Test hash and comparison
@@ -64,3 +66,34 @@ end
         @test hash(S1) == hash(S2)
     end
 end
+
+@testset "Geometry" begin
+    system = AtomicSystem([:C, :C])
+    positions = [
+        1.0 10.0
+        -5.0 5.0
+        1.2 1.2
+    ]
+    @test center_of_mass(system, positions) == [5.5, 0.0, 1.2]
+end
+
+@testset "Loading" begin
+    system, geometry = read("../data/CPCA.dat", AtomicSystem)
+    @test length(system) == 11
+
+    system, geometry = read("../data/formic_acid.xyz", AtomicSystem)
+    @test length(system) == 5
+
+    tmpfile = ".tmp.xyz"
+    try
+        write(tmpfile, system, geometry)
+        s2, g2 = read(tmpfile, AtomicSystem)
+
+        @test system == s2
+        @test geometry ≈ g2
+    finally
+        rm(tmpfile ; force = true)
+    end
+end
+
+include("electronic_structure.jl")

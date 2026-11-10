@@ -17,6 +17,13 @@ function to_element(str::AbstractString)
         "string $(str) unknown as either an atom name or an atom symbol."))
 end
 
+to_element_symbol(identifier) = Symbol(to_element(identifier).symbol)
+to_element_symbol(sym::Symbol) = sym
+
+atom_mass(A) = to_element(A).atomic_mass
+atom_color(A) = to_element(A).cpk_hex
+atom_symbol(A) = Symbol(to_element(A).symbol)
+
 """
     Atom
 
@@ -32,9 +39,12 @@ end
 
 Atom(element::Union{AbstractString, Symbol, Integer}, index, name) = Atom(to_element(element), index, name)
 
+to_element(atom::Atom) = atom.element
+
 iselement(A::Atom, elem) = iselement(A.element, elem)
 iselement(E::Element, elem) = (E.number == to_element(elem).number)
-iselement(elem) = (A -> iselement(A, elem))
+iselement(sym::Symbol, elem) = (sym == Symbol(to_element(elem).symbol))
+iselement(elem) = Base.Fix2(iselement, elem)
 
 to_element(A::Atom) = A.element
 
@@ -64,8 +74,9 @@ function Base.:(==)(A1::Atom, A2::Atom)
     A1.element == A2.element && A1.index == A2.index && A1.name == A2.name
 end
 
-Base.hash(A::Atom, h::UInt) = hash([A.element, A.index, A.name], h)
+Base.hash(A::Atom, h::UInt) = hash(A.element, hash(A.index, hash(A.name, h)))
 Base.broadcastable(A::Atom) = Ref(A)
+Base.isassigned(v::Vector, A::Atom) = isassigned(v, A.index)
 
 """
     AtomicSystem
@@ -100,11 +111,12 @@ function AtomicSystem(names::Vector{String}, elements::Vector)
     return AtomicSystem(atoms, Dict([name => i for (i, name) in enumerate(names)]))
 end
 
-function AtomicSystem(element_symbols::Vector ; name_prefix="")
+function AtomicSystem(elements::Vector{Element})
     counters = Dict()
     counts = []
 
-    for sym in element_symbols
+    for E in elements
+        sym = E.symbol
         if !haskey(counters, sym)
             counters[sym] = 1
         else
@@ -113,23 +125,21 @@ function AtomicSystem(element_symbols::Vector ; name_prefix="")
         push!(counts, counters[sym])
     end
 
-    names = map(zip(counts, element_symbols)) do (k, sym)
+    names = map(zip(counts, elements)) do (k, E)
+        sym = E.symbol
         if counters[sym] == 1
-            return "$name_prefix$sym"
+            return "$sym"
         else
-            return "$name_prefix$sym$k"
+            return "$sym$k"
         end
     end
 
-    return AtomicSystem(names, element_symbols)
+    return AtomicSystem(names, elements)
 end
 
-function AtomicSystem(element_numbers::Vector{<:Integer} ; name_prefix="")
-    element_symbols = map(element_numbers) do num
-        return Symbol(PeriodicTable.elements[num].symbol)
-    end
-    return AtomicSystem(element_symbols ; name_prefix=name_prefix)
-end
+AtomicSystem(element_symbols::Vector{Symbol}) = AtomicSystem([elements[sym] for sym in element_symbols])
+AtomicSystem(element_numbers::Vector{<:Integer}) = AtomicSystem([elements[Z] for Z in element_numbers])
+AtomicSystem(system::AtomicSystem) = system
 
 function Base.getproperty(system::AtomicSystem, sym::Symbol)
     sym === :elements && return getproperty.(system, :element)
@@ -190,9 +200,6 @@ function Base.hash(system::AtomicSystem, h::UInt)
 end
 
 Base.eltype(::AtomicSystem) = Atom
-
-atom_masses(system::AtomicSystem) = [A.element.atomic_mass for A in system]
-atom_colors(system::AtomicSystem) = [A.element.cpk_hex for A in system]
 
 """
     equivalent_system(system::AtomicSystem)
