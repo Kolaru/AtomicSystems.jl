@@ -31,4 +31,11 @@ export calculate_photoionizations, calculate_auger_decays, calculate_fluorescenc
     calculate_orbital_energies, calculate_total_energy
 export calculate_decays, highest_occupied_orbital, total_orbital_energy, binding_energy, closest_orbitals
 
+# Generic functions
+export atomic_color, atomic_mass, element_symbol
+
+atomic_mass(generic) = to_element(generic).atomic_mass
+atomic_color(generic) = to_element(generic).cpk_hex
+element_symbol(generic) = Symbol(to_element(generic).symbol)
+
 end # module AtomicSystem
