@@ -20,7 +20,12 @@ end
 to_element_symbol(identifier) = Symbol(to_element(identifier).symbol)
 to_element_symbol(sym::Symbol) = sym
 
-atom_mass(A) = to_element(A).atomic_mass
+function atomic_mass(A)
+    (A == "e" || A == :e) && return 1u"me_au"
+    return to_element(A).atomic_mass
+end
+
+atom_mass(A) = atomic_mass(A)
 atom_color(A) = to_element(A).cpk_hex
 atom_symbol(A) = Symbol(to_element(A).symbol)
 
