@@ -146,6 +146,7 @@ Base.lastindex(system::AtomicSystem) = length(system)
 Base.length(system::AtomicSystem) = length(system.atoms)
 Base.size(system::AtomicSystem) = length(system)
 Base.filter(f, system::AtomicSystem) = filter(f, system.atoms)
+Base.keys(system::AtomicSystem) = 1:length(system)
 
 # Retrieval by name
 function Base.getindex(system::AtomicSystem, name::String)
